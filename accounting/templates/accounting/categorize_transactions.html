@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categorize Transactions</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+<div class="max-w-7xl mx-auto p-8">
+
+    <div class="flex justify-between items-center mb-6">
+
+        <h1 class="text-3xl font-bold text-blue-700">
+            Transaction Dashboard
+        </h1>
+
+        <div class="space-x-3">
+
+            <a href="{% url 'add_transaction' %}"
+               class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg">
+                Add Transaction
+            </a>
+
+            <a href="{% url 'generate_gst_report' %}"
+               class="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-lg">
+                GST Report
+            </a>
+
+            <a href="{% url 'generate_total_gst_bill' %}"
+               class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-lg">
+                Total GST Bill
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+
+        <table class="min-w-full">
+
+            <thead class="bg-blue-600 text-white">
+
+                <tr>
+
+                    <th class="px-4 py-3">Date</th>
+                    <th class="px-4 py-3">Description</th>
+                    <th class="px-4 py-3">Amount</th>
+                    <th class="px-4 py-3">Type</th>
+                    <th class="px-4 py-3">Category</th>
+                    <th class="px-4 py-3">Save</th>
+                    <th class="px-4 py-3">GST Bill</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for transaction in transactions %}
+
+                <tr class="border-b hover:bg-gray-50">
+
+                    <td class="px-4 py-3">
+                        {{ transaction.date }}
+                    </td>
+
+                    <td class="px-4 py-3">
+                        {{ transaction.description }}
+                    </td>
+
+                    <td class="px-4 py-3">
+                        ₹ {{ transaction.amount }}
+                    </td>
+
+                    <td class="px-4 py-3">
+                        {{ transaction.type }}
+                    </td>
+
+                    <td class="px-4 py-3">
+
+                        <form method="POST">
+
+                            {% csrf_token %}
+
+                            <input
+                                type="hidden"
+                                name="transaction_id"
+                                value="{{ transaction.id }}">
+
+                            <select
+                                name="category"
+                                class="border rounded-lg px-3 py-2 w-full">
+
+                                {% for category in categories %}
+
+                                <option
+                                    value="{{ category.id }}"
+                                    {% if transaction.category and transaction.category.id == category.id %}
+                                    selected
+                                    {% endif %}>
+
+                                    {{ category.name }}
+
+                                </option>
+
+                                {% endfor %}
+
+                            </select>
+
+                    </td>
+
+                    <td class="px-4 py-3">
+
+                        <button
+                            type="submit"
+                            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+
+                            Save
+
+                        </button>
+
+                        </form>
+
+                    </td>
+
+                    <td class="px-4 py-3">
+
+                        <a
+                            href="{% url 'generate_gst_bill' transaction.id %}"
+                            class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded">
+
+                            GST Bill
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+            {% empty %}
+
+                <tr>
+
+                    <td colspan="7" class="text-center py-6">
+
+                        No transactions available.
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+</html>
