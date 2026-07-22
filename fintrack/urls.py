@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from django.urls import path
 
 
 def home(request):
