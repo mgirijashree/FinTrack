@@ -1,5 +1,5 @@
 """
-ASGI config for fintrac project.
+ASGI config for fintrack project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
