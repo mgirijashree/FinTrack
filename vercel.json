@@ -1,0 +1,14 @@
+{
+  "builds": [
+    {
+      "src": "fintrack/wsgi.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "fintrack/wsgi.py"
+    }
+  ]
+}
